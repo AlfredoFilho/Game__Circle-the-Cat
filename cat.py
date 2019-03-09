@@ -14,7 +14,7 @@ startPosition = cat
 chosen_exit = exits
 CAT = tuple(cat)
 positionsVisited = []
-expandedStates = []
+expandedPositions = []
 
 
 def next_move(direction, cat) :
@@ -39,18 +39,18 @@ def BreadthFirstSearch (cat, chosen_exit, blocks):
         if(atual not in blocks and atual in chosen_exit):
             solutionFound = True
             break
-        expandedSuccessors = findSuccessorPositions(atual, expandedStates, positionsVisited) #call function to walk with the cat and find the next positions
-        expandedStates.append(atual)
+        expandedSuccessors = findSuccessorPositions(atual, expandedPositions, positionsVisited) #call function to walk with the cat and find the next positions
+        expandedPositions.append(atual)
 
         for i in range (0, len(expandedSuccessors)): #check the new positions to see if they have already been included
             successor = expandedSuccessors[i]
-            if successor not in expandedStates and successor not in positionsVisited:
+            if successor not in expandedPositions and successor not in positionsVisited:
                 positionsVisited.append(expandedSuccessors[i])
  
 
     if solutionFound == True:
         movimento = Solution(atual)
-        expandedStates.clear()
+        expandedPositions.clear()
         positionsVisited.clear()
         expandedSuccessors.clear()
         print(movimento[-1])
@@ -59,7 +59,7 @@ def BreadthFirstSearch (cat, chosen_exit, blocks):
 predecessorCoordinates={}
 predecessorPosition={}
 
-def findSuccessorPositions(cat, expandedStates, positionsVisited):
+def findSuccessorPositions(cat, expandedPositions, positionsVisited):
     coordenadas = ["NE","E","SW","SE","W","NW"]
     successorPositions=[]
     for el in coordenadas:
@@ -68,7 +68,7 @@ def findSuccessorPositions(cat, expandedStates, positionsVisited):
             continue
         elif(successor in blocks):
             continue
-        elif(successor not in expandedStates and successor not in positionsVisited and successor not in blocks):
+        elif(successor not in expandedPositions and successor not in positionsVisited and successor not in blocks):
             successorPositions.append(successor)
             predecessorCoordinates[successor]=el
             predecessorPosition[successor]=cat
