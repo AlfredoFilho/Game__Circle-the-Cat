@@ -1,7 +1,11 @@
 '''
+*******************Developed by:********************************
+    
 Alfredo Albelis Batista Filho - https://github.com/AlfredoFilho
 Brenda Alexsandra Januario - https://github.com/brendajanuario
-Cleofas Peres Santos - 
+Cleofas Peres Santos -
+
+**************************************************************** 
 '''
 
 import sys
@@ -9,13 +13,11 @@ cat    = eval(sys.argv[1])
 blocks = eval(sys.argv[2])
 exits  = eval(sys.argv[3])
 
-
 startPosition = cat
 chosen_exit = exits
-CAT = tuple(cat)
+catInTuple = tuple(cat)
 positionsVisited = []
-expandedPositions = []
-
+expandedStates = []
 
 def next_move(direction, cat) :
     candidatos = {
@@ -28,7 +30,6 @@ def next_move(direction, cat) :
     }
     return candidatos[direction][cat[0]%2]
 
-
 def BreadthFirstSearch (cat, chosen_exit, blocks):
 
     solutionFound = False
@@ -39,36 +40,35 @@ def BreadthFirstSearch (cat, chosen_exit, blocks):
         if(atual not in blocks and atual in chosen_exit):
             solutionFound = True
             break
-        expandedSuccessors = findSuccessorPositions(atual, expandedPositions, positionsVisited) #call function to walk with the cat and find the next positions
-        expandedPositions.append(atual)
+        successorStates = findSuccessorPositions(atual, expandedStates, positionsVisited) #call function to walk with the cat and find the next positions
+        expandedStates.append(atual)
 
-        for i in range (0, len(expandedSuccessors)): #check the new positions to see if they have already been included
-            successor = expandedSuccessors[i]
-            if successor not in expandedPositions and successor not in positionsVisited:
-                positionsVisited.append(expandedSuccessors[i])
+        for i in range (0, len(successorStates)): #check the new positions to see if they have already been included
+            successor = successorStates[i]
+            if successor not in expandedStates and successor not in positionsVisited:
+                positionsVisited.append(successorStates[i])
  
-
     if solutionFound == True:
         movimento = Solution(atual)
-        expandedPositions.clear()
+        expandedStates.clear()
         positionsVisited.clear()
-        expandedSuccessors.clear()
+        successorStates.clear()
         print(movimento[-1])
     return 0
     
 predecessorCoordinates={}
 predecessorPosition={}
 
-def findSuccessorPositions(cat, expandedPositions, positionsVisited):
-    coordenadas = ["NE","E","SW","SE","W","NW"]
+def findSuccessorPositions(cat, expandedStates, positionsVisited):
+    coordinates = ["NE","E","SW","SE","W","NW"]
     successorPositions=[]
-    for el in coordenadas:
+    for el in coordinates:
         successor = next_move(el, cat)
         if (successor[0]<0 or successor[1]<0 or successor[0]>10 or successor[1]>10):
             continue
         elif(successor in blocks):
             continue
-        elif(successor not in expandedPositions and successor not in positionsVisited and successor not in blocks):
+        elif(successor not in expandedStates and successor not in positionsVisited and successor not in blocks):
             successorPositions.append(successor)
             predecessorCoordinates[successor]=el
             predecessorPosition[successor]=cat
@@ -86,4 +86,4 @@ def Solution(cat):
         aux = predecessorPosition[aux]
     return listCoordinates
 
-BreadthFirstSearch(CAT, chosen_exit, blocks)
+BreadthFirstSearch(catInTuple, chosen_exit, blocks)

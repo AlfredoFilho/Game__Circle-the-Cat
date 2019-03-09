@@ -1,8 +1,13 @@
 '''
+*******************Developed by:********************************
+    
 Alfredo Albelis Batista Filho - https://github.com/AlfredoFilho
 Brenda Alexsandra Januario - https://github.com/brendajanuario
-Cleofas Peres Santos - 
+Cleofas Peres Santos -
+
+**************************************************************** 
 '''
+
 import sys
 import random
 from math import sqrt
@@ -11,10 +16,10 @@ cat    = eval(sys.argv[1])
 blocks = eval(sys.argv[2])
 exits  = eval(sys.argv[3])
 
-gato = tuple(cat)
+catInTuple = tuple(cat)
 startPosition = cat
-positionsVisited = [] #posicoes que ja foram pisadas
-expandedPositions = [] #posicoes que foram pisadas que derivaram outras posicoes na lista
+positionsVisited = [] #positions that have already been visited
+expandedStates = [] #positions that have been visited that have formed other positions in the list
 exitCloser=0
 
 '''************ Initializing Hexagons **************'''
@@ -57,19 +62,16 @@ hexYellow = [(6, 0), (7, 0), (8, 1), (9, 1), (10, 2), (10, 3), (10, 4), (10, 5),
 
 '''*************************************************************************************************'''
 
+#generates a random coordinate near the cat - this function is used after it has no more outputs
 def generate_random(used) :
     candidate = (random.randint(cat[0]-1, cat[0]+1)), random.randint(cat[1]-1, cat[1]+1)
     while (candidate in used) or (cat[0] < 0 or cat[0] > 10 or cat[1] < 0 or cat[1] > 10 or cat in candidate) :
         candidate = (random.randint(cat[0]-1, cat[0]+1)), random.randint(cat[1]-1, cat[1]+1) 
     return candidate
 
-def distance(validos, gato) :
-    
-    return exitCloser
-
-def printarVertice(validos, blocks, cat, gato, vertices_All, menorCoordenada):
+def printVertice(available, blocks, cat, catInTuple, vertices_All, menorCoordenada):
         
-        result = all(element in blocks for element in validos)
+        result = all(element in blocks for element in available)
         
         if result:
             controle = 0
@@ -79,12 +81,12 @@ def printarVertice(validos, blocks, cat, gato, vertices_All, menorCoordenada):
     
         DisTVertSemBlocks = []
         for el in vertices_All:
-            if el not in blocks and el not in gato:
+            if el not in blocks and el not in catInTuple:
                 DisTVertSemBlocks.append(el)
 
         dist = 100
-        for el in validos:
-            if (el not in blocks and el not in gato):       
+        for el in available:
+            if (el not in blocks and el not in catInTuple):       
                 a = sqrt(((cat[0]-el[0])**2 + (cat[1] - el[1])**2))
                 if(a < dist):
                     dist=a
@@ -93,7 +95,7 @@ def printarVertice(validos, blocks, cat, gato, vertices_All, menorCoordenada):
         
         distVertice = 100
         for el in vertices_All:
-            if (el not in blocks and el not in gato):       
+            if (el not in blocks and el not in catInTuple):       
                 a = sqrt(((cat[0]-el[0])**2 + (cat[1] - el[1])**2))
                 if(a < distVertice):
                     distVertice=a
@@ -128,24 +130,24 @@ for el in blocks:
 
 '''**********************************************************************************'''
 if (cAzul > cRosa and cAzul > cAmarelo):
-        validos = []  
-        validos = hexBlue
-        todosVert = vertBlue_all
+        available = []  
+        available = hexBlue
+        allVerticesOfTheChosenHexagon = vertBlue_all
 
 elif (cRosa > cAzul and cRosa > cAmarelo):
-        validos = []  
-        validos = hexPink
-        todosVert = vertPink_all
+        available = []  
+        available = hexPink
+        allVerticesOfTheChosenHexagon = vertPink_all
                         
 elif (cAmarelo > cRosa and cAmarelo > cAzul):
-        validos = []      
-        validos = hexYellow
-        todosVert = vertYellow_all
+        available = []      
+        available = hexYellow
+        allVerticesOfTheChosenHexagon = vertYellow_all
                                         
 else:
-    validos = []  
-    validos = hexBlue
-    todosVert = vertBlue_all
+    available = []  
+    available = hexBlue
+    allVerticesOfTheChosenHexagon = vertBlue_all
         
 ##########################################################################
     
@@ -161,69 +163,70 @@ def next_move(direction, cat) :
     return candidatos[direction][cat[0]%2]
 
 
-def busca_em_largura (cat, chosen_exit,blocks):
+def BreadthFirstSearch (cat, chosen_exit,blocks):
 
-    solucao_encontrada = False
-    positionsVisited.append(cat) #adiciona o cat na lista de posicoes visitadas
+    solutionFound = False
+    positionsVisited.append(cat) #add cat in list of positions visited
+    
     while len(positionsVisited) != 0:
-        atual = positionsVisited.pop(0) #retira primeiro da lista
+        atual = positionsVisited.pop(0) #remove first of list
         if(atual not in blocks and atual in chosen_exit):
-            solucao_encontrada = True
+            solutionFound = True
             break
-        estados_sucessores = encontra_posicoes_sucessoras(atual, expandedPositions, positionsVisited) #chama funcao para andar com o gato e achar as proximas posicoes
-        expandedPositions.append(atual)
+        successorStates = findSuccessorPositions(atual, expandedStates, positionsVisited) #call function to walk with the cat and find the next positions
+        expandedStates.append(atual)
 
-        for i in range (0, len(estados_sucessores)): #conferir as novas posicoes para saber se ja foram inclusas
-            sucessor = estados_sucessores[i]
-            if sucessor not in expandedPositions and sucessor not in positionsVisited:
-                positionsVisited.append(estados_sucessores[i])
+        for i in range (0, len(successorStates)): #check the new positions to see if they have already been included
+            successor = successorStates[i]
+            if successor not in expandedStates and successor not in positionsVisited:
+                positionsVisited.append(successorStates[i])
  
 
-    if solucao_encontrada == True:
-        movimento = solucao(atual)       
+    if solutionFound == True:
+        movimento = Solution(atual)       
         return movimento
     
-coordenada_antecessora={}
-posicao_antecessora={}
+predecessorCoordinates={}
+predecessorPosition={}
 
-def encontra_posicoes_sucessoras(cat, expandedPositions, positionsVisited):
-    coordenadas = ["NE","E","SW","SE","W","NW"]
-    posicoes_sucessoras=[]
-    for el in coordenadas:
-        sucessor = next_move(el, cat)
-        if (sucessor[0]<0 or sucessor[1]<0 or sucessor[0]>10 or sucessor[1]>10):
+def findSuccessorPositions(cat, expandedStates, positionsVisited):
+    coordinates = ["NE","E","SW","SE","W","NW"]
+    successorPositions=[]
+    for el in coordinates:
+        successor = next_move(el, cat)
+        if (successor[0]<0 or successor[1]<0 or successor[0]>10 or successor[1]>10):
             continue
-        elif(sucessor in blocks):
+        elif(successor in blocks):
             continue
-        elif(sucessor not in expandedPositions and sucessor not in positionsVisited and sucessor not in blocks):
-            posicoes_sucessoras.append(sucessor)
-            coordenada_antecessora[sucessor]=el
-            posicao_antecessora[sucessor]=cat
+        elif(successor not in expandedStates and successor not in positionsVisited and successor not in blocks):
+            successorPositions.append(successor)
+            predecessorCoordinates[successor]=el
+            predecessorPosition[successor]=cat
     
-    return posicoes_sucessoras
+    return successorPositions
     
-def solucao(cat):
-    lista_posicoes=[]
-    lista_coordenadas=[]
+def Solution(cat):
+    listPositions=[]
+    listCoordinates=[]
     aux=cat
-    lista_posicoes.append(cat)
+    listPositions.append(cat)
     while (aux != tuple(startPosition)):
-        lista_posicoes.append(posicao_antecessora[aux])
-        lista_coordenadas.append(coordenada_antecessora[aux])
-        aux = posicao_antecessora[aux]
-    return lista_posicoes
+        listPositions.append(predecessorPosition[aux])
+        listCoordinates.append(predecessorCoordinates[aux])
+        aux = predecessorPosition[aux]
+    return listPositions
 
-caminho = busca_em_largura(gato, validos, blocks)
+caminho = BreadthFirstSearch(catInTuple, available, blocks)
 
-result = all(element in blocks for element in validos)
+result = all(element in blocks for element in available)
     
 if result:
     print(generate_random(blocks + [tuple(cat)]))
 
 else:
-    for el in validos: 
+    for el in available: 
         if el in caminho and el not in blocks:
             for way in caminho:
                 if (el == way):
-                    printarVertice(validos, blocks, cat, gato, todosVert, el)
+                    printVertice(available, blocks, cat, catInTuple, allVerticesOfTheChosenHexagon, el)
         
