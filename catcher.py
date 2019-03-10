@@ -16,8 +16,8 @@ cat    = eval(sys.argv[1])
 blocks = eval(sys.argv[2])
 exits  = eval(sys.argv[3])
 
-catInTuple = tuple(cat)
-startPosition = cat
+positionCatInTuple = tuple(cat)
+positionCat = cat
 positionsVisited = [] #positions that have already been visited
 expandedStates = [] #positions that have been visited that have formed other positions in the list
 exitCloser=0
@@ -28,6 +28,7 @@ exitCloser=0
 hexBlue = []
 hexPink = []
 hexYellow = []
+
 '''**************************************************'''
 
 '''*************************************Blue Hexagon***********************************************'''
@@ -62,14 +63,13 @@ hexYellow = [(6, 0), (7, 0), (8, 1), (9, 1), (10, 2), (10, 3), (10, 4), (10, 5),
 
 '''*************************************************************************************************'''
 
-#generates a random coordinate near the cat - this function is used after it has no more outputs
-def generate_random(used) :
+def generate_random(used) :#generates a random coordinate near the cat - this function is used after it has no more outputs
     candidate = (random.randint(cat[0]-1, cat[0]+1)), random.randint(cat[1]-1, cat[1]+1)
     while (candidate in used) or (cat[0] < 0 or cat[0] > 10 or cat[1] < 0 or cat[1] > 10 or cat in candidate) :
         candidate = (random.randint(cat[0]-1, cat[0]+1)), random.randint(cat[1]-1, cat[1]+1) 
     return candidate
 
-def printVertice(available, blocks, cat, catInTuple, vertices_All, menorCoordenada):
+def printVertice(available, blocks, cat, positionCatInTuple, vertices_All, menorCoordenada):
         
         result = all(element in blocks for element in available)
         
@@ -78,79 +78,38 @@ def printVertice(available, blocks, cat, catInTuple, vertices_All, menorCoordena
             while controle == 0:
                 print(generate_random(blocks + [tuple(cat)]))
                 controle = 1
-    
-        DisTVertSemBlocks = []
-        for el in vertices_All:
-            if el not in blocks and el not in catInTuple:
-                DisTVertSemBlocks.append(el)
 
-        dist = 100
+        dist = 100 #100 is a large random number
+        
+        #calculate the distance for all available outputs
         for el in available:
-            if (el not in blocks and el not in catInTuple):       
+            if (el not in blocks and el not in positionCatInTuple):       
                 a = sqrt(((cat[0]-el[0])**2 + (cat[1] - el[1])**2))
                 if(a < dist):
-                    dist=a
+                    dist=a #dist will have the distance to the nearest exit
         
-        MenorVert = (11, 11)
+        coordinateNearestVertice = (11, 11) #(11, 11) is a large random number
+        distVertice = 100 #100 is a large random number
         
-        distVertice = 100
+        #calculate the distance for all available vertices
         for el in vertices_All:
-            if (el not in blocks and el not in catInTuple):       
+            if (el not in blocks and el not in positionCatInTuple):       
                 a = sqrt(((cat[0]-el[0])**2 + (cat[1] - el[1])**2))
                 if(a < distVertice):
-                    distVertice=a
-                    MenorVert=el
+                    distVertice=a #disVertice will have the distance to the nearest vertice
+                    coordinateNearestVertice=el #coordinateNearestVertice will have the distance to the nearest vertice
                  
         if (dist >= 2 and distVertice >= 3.1622776601683795):
             
-            if MenorVert != (11, 11):
-                print(MenorVert)
+            if coordinateNearestVertice != (11, 11):
+                print(coordinateNearestVertice)
             
             else:
                 print(menorCoordenada)
                 
         else:
             print(menorCoordenada)
-                    
-cAzul = 0
-cRosa = 0
-cAmarelo = 0
-
-for el in blocks:
-    if (el in vertBlue_all):
-        cAzul = cAzul + 1
-
-for el in blocks:
-    if (el in vertPink_all):
-            cRosa = cRosa + 1
-
-for el in blocks:
-    if (el in vertYellow_all):
-            cAmarelo = cAmarelo + 1
-
-'''**********************************************************************************'''
-if (cAzul > cRosa and cAzul > cAmarelo):
-        available = []  
-        available = hexBlue
-        allVerticesOfTheChosenHexagon = vertBlue_all
-
-elif (cRosa > cAzul and cRosa > cAmarelo):
-        available = []  
-        available = hexPink
-        allVerticesOfTheChosenHexagon = vertPink_all
                         
-elif (cAmarelo > cRosa and cAmarelo > cAzul):
-        available = []      
-        available = hexYellow
-        allVerticesOfTheChosenHexagon = vertYellow_all
-                                        
-else:
-    available = []  
-    available = hexBlue
-    allVerticesOfTheChosenHexagon = vertBlue_all
-        
-##########################################################################
-    
 def next_move(direction, cat) :
     candidatos = {
         "NW": [(cat[0]-1, cat[1]-1), (cat[0]-1, cat[1])],
@@ -162,11 +121,13 @@ def next_move(direction, cat) :
     }
     return candidatos[direction][cat[0]%2]
 
-
 def BreadthFirstSearch (cat, chosen_exit,blocks):
 
+    #BreadthFirstSearch is the same algorithm to find out the best way
+    #for the cat to walk, has been transferred to the catcher to be used to block the best trajectory
+    
     solutionFound = False
-    positionsVisited.append(cat) #add cat in list of positions visited
+    positionsVisited.append(cat) #add cat position in list of positions visited
     
     while len(positionsVisited) != 0:
         atual = positionsVisited.pop(0) #remove first of list
@@ -180,7 +141,6 @@ def BreadthFirstSearch (cat, chosen_exit,blocks):
             successor = successorStates[i]
             if successor not in expandedStates and successor not in positionsVisited:
                 positionsVisited.append(successorStates[i])
- 
 
     if solutionFound == True:
         movimento = Solution(atual)       
@@ -210,15 +170,57 @@ def Solution(cat):
     listCoordinates=[]
     aux=cat
     listPositions.append(cat)
-    while (aux != tuple(startPosition)):
+    while (aux != tuple(positionCat)):
         listPositions.append(predecessorPosition[aux])
         listCoordinates.append(predecessorCoordinates[aux])
         aux = predecessorPosition[aux]
     return listPositions
 
-caminho = BreadthFirstSearch(catInTuple, available, blocks)
+'''**********************************************************************************'''
+#check the number of blocked vertices of each hexagon
+quantOfBlueHexagonVerticesBlocked = 0
+quantOfPinkHexagonVerticesBlocked = 0
+quantOfYellowHexagonVerticesBlocked = 0
 
-result = all(element in blocks for element in available)
+for el in blocks:
+    if (el in vertBlue_all):
+        quantOfBlueHexagonVerticesBlocked = quantOfBlueHexagonVerticesBlocked + 1
+
+for el in blocks:
+    if (el in vertPink_all):
+            quantOfPinkHexagonVerticesBlocked = quantOfPinkHexagonVerticesBlocked + 1
+
+for el in blocks:
+    if (el in vertYellow_all):
+            quantOfYellowHexagonVerticesBlocked = quantOfYellowHexagonVerticesBlocked + 1
+'''**********************************************************************************'''
+
+#chooses hexagon with more vertices blocked
+if (quantOfBlueHexagonVerticesBlocked > quantOfPinkHexagonVerticesBlocked and quantOfBlueHexagonVerticesBlocked > quantOfYellowHexagonVerticesBlocked):
+        available = []  
+        available = hexBlue
+        allVerticesOfTheChosenHexagon = vertBlue_all
+
+elif (quantOfPinkHexagonVerticesBlocked > quantOfBlueHexagonVerticesBlocked and quantOfPinkHexagonVerticesBlocked > quantOfYellowHexagonVerticesBlocked):
+        available = []  
+        available = hexPink
+        allVerticesOfTheChosenHexagon = vertPink_all
+                        
+elif (quantOfYellowHexagonVerticesBlocked > quantOfPinkHexagonVerticesBlocked and quantOfYellowHexagonVerticesBlocked > quantOfBlueHexagonVerticesBlocked):
+        available = []      
+        available = hexYellow
+        allVerticesOfTheChosenHexagon = vertYellow_all
+                                        
+else:
+    available = []  
+    available = hexBlue
+    allVerticesOfTheChosenHexagon = vertBlue_all
+        
+'''**********************************************************************************'''
+
+caminho = BreadthFirstSearch(positionCatInTuple, available, blocks)
+
+result = all(element in blocks for element in available)#check if the hegaxono have already been completely blocked
     
 if result:
     print(generate_random(blocks + [tuple(cat)]))
@@ -228,5 +230,5 @@ else:
         if el in caminho and el not in blocks:
             for way in caminho:
                 if (el == way):
-                    printVertice(available, blocks, cat, catInTuple, allVerticesOfTheChosenHexagon, el)
+                    printVertice(available, blocks, cat, positionCatInTuple, allVerticesOfTheChosenHexagon, el)
         

@@ -33,7 +33,7 @@ def next_move(direction, cat) :
 def BreadthFirstSearch (cat, chosen_exit, blocks):
 
     solutionFound = False
-    positionsVisited.append(cat) #add cat in list of positions visited
+    positionsVisited.append(cat) #add cat position in list of positions visited
     
     while len(positionsVisited) != 0:
         atual = positionsVisited.pop(0) #remove first of list
