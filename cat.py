@@ -1,9 +1,9 @@
 '''
-*******************Developed by:********************************
+*******************Developed by********************************
     
 Alfredo Albelis Batista Filho - https://github.com/AlfredoFilho
 Brenda Alexsandra Januario - https://github.com/brendajanuario
-Cleofas Peres Santos -
+Cleofas Peres Santos - https://github.com/CleoPeres
 
 **************************************************************** 
 '''
@@ -13,9 +13,9 @@ cat    = eval(sys.argv[1])
 blocks = eval(sys.argv[2])
 exits  = eval(sys.argv[3])
 
-startPosition = cat
+positionCat = cat
 chosen_exit = exits
-catInTuple = tuple(cat)
+positionCatInTuple = tuple(cat)
 positionsVisited = []
 expandedStates = []
 
@@ -80,10 +80,10 @@ def Solution(cat):
     listCoordinates=[]
     aux=cat
     listPositions.append(cat)
-    while (aux != tuple(startPosition)):
+    while (aux != tuple(positionCat)):
         listPositions.append(predecessorPosition[aux])
         listCoordinates.append(predecessorCoordinates[aux])
         aux = predecessorPosition[aux]
     return listCoordinates
 
-BreadthFirstSearch(catInTuple, chosen_exit, blocks)
+BreadthFirstSearch(positionCatInTuple, chosen_exit, blocks)

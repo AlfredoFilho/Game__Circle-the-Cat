@@ -1,9 +1,9 @@
 '''
-*******************Developed by:********************************
+*******************Developed by********************************
     
 Alfredo Albelis Batista Filho - https://github.com/AlfredoFilho
 Brenda Alexsandra Januario - https://github.com/brendajanuario
-Cleofas Peres Santos -
+Cleofas Peres Santos -  https://github.com/CleoPeres
 
 **************************************************************** 
 '''
@@ -69,7 +69,7 @@ def generate_random(used) :#generates a random coordinate near the cat - this fu
         candidate = (random.randint(cat[0]-1, cat[0]+1)), random.randint(cat[1]-1, cat[1]+1) 
     return candidate
 
-def printVertice(available, blocks, cat, positionCatInTuple, vertices_All, menorCoordenada):
+def printVertice(available, blocks, cat, positionCatInTuple, vertices_All, closestCoordinate):
         
         result = all(element in blocks for element in available)
         
@@ -88,7 +88,7 @@ def printVertice(available, blocks, cat, positionCatInTuple, vertices_All, menor
                 if(a < dist):
                     dist=a #dist will have the distance to the nearest exit
         
-        coordinateNearestVertice = (11, 11) #(11, 11) is a large random number
+        coordinateClosestVertice = (11, 11) #(11, 11) is a large random number
         distVertice = 100 #100 is a large random number
         
         #calculate the distance for all available vertices
@@ -97,18 +97,18 @@ def printVertice(available, blocks, cat, positionCatInTuple, vertices_All, menor
                 a = sqrt(((cat[0]-el[0])**2 + (cat[1] - el[1])**2))
                 if(a < distVertice):
                     distVertice=a #disVertice will have the distance to the nearest vertice
-                    coordinateNearestVertice=el #coordinateNearestVertice will have the distance to the nearest vertice
+                    coordinateClosestVertice=el #coordinateClosestVertice will have the distance to the nearest vertice
                  
         if (dist >= 2 and distVertice >= 3.1622776601683795):
             
-            if coordinateNearestVertice != (11, 11):
-                print(coordinateNearestVertice)
+            if coordinateClosestVertice != (11, 11):
+                print(coordinateClosestVertice)
             
             else:
-                print(menorCoordenada)
+                print(closestCoordinate)
                 
         else:
-            print(menorCoordenada)
+            print(closestCoordinate)
                         
 def next_move(direction, cat) :
     candidatos = {
@@ -121,7 +121,7 @@ def next_move(direction, cat) :
     }
     return candidatos[direction][cat[0]%2]
 
-def BreadthFirstSearch (cat, chosen_exit,blocks):
+def BreadthFirstSearch (cat, chosen_exit, blocks):
 
     #BreadthFirstSearch is the same algorithm to find out the best way
     #for the cat to walk, has been transferred to the catcher to be used to block the best trajectory
