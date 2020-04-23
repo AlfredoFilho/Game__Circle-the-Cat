@@ -50,9 +50,9 @@ def BreadthFirstSearch (cat, chosen_exit, blocks):
  
     if solutionFound == True:
         movimento = Solution(atual)
-        expandedStates.clear()
-        positionsVisited.clear()
-        successorStates.clear()
+        del expandedStates[:]
+        del positionsVisited[:]
+        del successorStates[:]
         print(movimento[-1])
     return 0
     

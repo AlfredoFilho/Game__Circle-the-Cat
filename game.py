@@ -12,7 +12,7 @@ exits  = eval(sys.argv[3])
 
 
 def compute_image(cat, blocks, exits) :
-    im = Image.open("gameboard.png").convert("RGBA")
+    im = Image.open("media/gameboard.png").convert("RGBA")
     draw = ImageDraw.Draw(im)                
 
     for el in exits :
@@ -128,7 +128,7 @@ while True :
     if DEBUG :
         print("###### Blocks: %s" % str(blocks))
     
-    catcher_output = subprocess.Popen(['python', 'catcher.py', str(cat), str(blocks), str(exits)], stdout=subprocess.PIPE).communicate()[0].rstrip()
+    catcher_output = subprocess.Popen(['python3', 'media/catcher.py', str(cat), str(blocks), str(exits)], stdout=subprocess.PIPE).communicate()[0].rstrip()
     catcher = valid_move_catcher(cat, catcher_output, blocks, exits)
     if catcher == "loss" :
         print("0")
@@ -142,7 +142,7 @@ while True :
 
 
     
-    cat_output = subprocess.Popen(['python', 'cat.py', str(cat), str(blocks), str(exits)],
+    cat_output = subprocess.Popen(['python3', 'media/cat.py', str(cat), str(blocks), str(exits)],
                                   stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 
 
