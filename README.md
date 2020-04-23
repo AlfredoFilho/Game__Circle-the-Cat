@@ -3,7 +3,7 @@
 
 Como isso funciona?
 
-**Cat** - O algoritimo usado para o gato se movimentar foi o **_busca em largura_**, para cada coordenada em volta ele busca todas as opções e no fim guarda em uma lista o caminho com menos movimentos até saída. <br />
+**Cat** - O algoritimo usado para o gato se movimentar foi o **_busca em largura_**, para cada coordenada em volta ele busca todas as opções e no fim guarda em uma lista o caminho com menos movimentos até a saída. <br />
 
 **Catcher** - Para o pegador foi utilizado duas técnicas, para bloquear a saída mais próxima foi usado o algotimo de **_busca em largura_**, o mesmo utilizado no gato para se encontrar a saída mais próxima, e a segunda técnica foi moldar o tabuleiro para um formato que seria mais eficaz para conseguir prender o gato, o molde utilizado foi o hexágono (hexágono é a forma com maior área e menor perimetro, então seria o modo mais fácil de prender o gato).
 
@@ -29,6 +29,6 @@ python3 game.py "(5, 5)" "[(3, 6), (8, 7), (0, 7), (0, 8), (8, 2), (4, 10)]" "[(
 Um gif no diretório será criado após a execução - `game.gif`
 
 Desenvolvedores:<br/>
-[Alfredo Albélis](https://github.com/AlfredoFilho)<br/>
-[Brenda Alexsandra](https://github.com/brendajanuario)<br/>
-[Cléofas Peres](https://github.com/CleoPeres)<br/> 
+ - [Alfredo Albélis](https://github.com/AlfredoFilho)<br/>
+ - [Brenda Alexsandra](https://github.com/brendajanuario)<br/>
+ - [Cléofas Peres](https://github.com/CleoPeres)<br/> 
