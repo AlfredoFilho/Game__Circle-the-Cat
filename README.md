@@ -1,7 +1,8 @@
 # Game - Circle the Cat
 
+Caso não conheça o jogo, acesse: [https://www.gamedesign.jp/sp/cat/](https://www.gamedesign.jp/sp/cat/)
 
-Como isso funciona?
+## Como isso funciona?
 
 **Cat** - O algoritimo usado para o gato se movimentar foi o **_busca em largura_**, para cada coordenada em volta ele busca todas as opções e no fim guarda em uma lista o caminho com menos movimentos até a saída. <br />
 
@@ -13,9 +14,9 @@ Como isso funciona?
 
 ### Legenda
 
-![#000000](https://placehold.it/15/000000/000000?text=+) - Gato<br>
-![#1589F0](https://placehold.it/15/1589F0/000000?text=+) - Saídas<br>
-![#f03c15](https://placehold.it/15/f03c15/000000?text=+) - Bloqueados
+![#000000](https://via.placeholder.com/15/000000/000000?text=+) - Gato<br>
+![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - Saídas<br>
+![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) - Bloqueados
 
 ### Como executar
 ```python
